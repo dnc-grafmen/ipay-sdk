@@ -9,6 +9,7 @@ use IPaySdk\Entity\CompletionEntityResponse;
 use IPaySdk\Entity\CreatePaymentEntityResponse;
 use IPaySdk\Entity\EntityInterface;
 use IPaySdk\Entity\TransactionEntityResponse;
+use IPaySdk\Entity\Transactions;
 use IPaySdk\Service\ResponseTransformService;
 use PHPUnit\Framework\TestCase;
 use Psr\Http\Message\ResponseInterface;
@@ -33,7 +34,9 @@ class ResponseTransformServiceTest extends TestCase
         $class = get_class($expectedEntity);
         $entity = $this->responseTransformService->convertResponse($response, $class);
 
-        dump($entity);
+        if ($entity instanceof CompletionEntityResponse) {
+            dump($entity->getTransactions(), $expectedEntity->getTransactions());
+        }
 
         self::assertTrue($entity instanceof $class);
         self::assertEquals($expectedEntity, $entity);
@@ -53,13 +56,12 @@ class ResponseTransformServiceTest extends TestCase
     <url>https://checkout.ipay.ua/a1f7e6a6ced6fc72d4dbb48da6babc7d2ca89ac2</url>
 </payment>'
                 ),
-                new CreatePaymentEntityResponse(
-                    12345678,
-                    1,
-                    'e9be5bc9a02a5af61efecd722b7b05e84d106d1a',
-                    '0c8698119b846202bd87d948cfce1eba7bc535c49dca4752fe8f969abefd05147b4b87fd9332173e242a0f1a78a42eed8c1846d4781a220fd564f0fbce3ff393',
-                    'https://checkout.ipay.ua/a1f7e6a6ced6fc72d4dbb48da6babc7d2ca89ac2'
-                ),
+                (new CreatePaymentEntityResponse())
+                    ->setPid(12345678)
+                    ->setStatus(1)
+                    ->setSalt('e9be5bc9a02a5af61efecd722b7b05e84d106d1a')
+                    ->setSign('0c8698119b846202bd87d948cfce1eba7bc535c49dca4752fe8f969abefd05147b4b87fd9332173e242a0f1a78a42eed8c1846d4781a220fd564f0fbce3ff393')
+                    ->setUrl('https://checkout.ipay.ua/a1f7e6a6ced6fc72d4dbb48da6babc7d2ca89ac2'),
             ],
             [
                 $this->createResponse(
@@ -83,26 +85,27 @@ class ResponseTransformServiceTest extends TestCase
     <sign>566d16af0f9aeb12d055a2117160194ec0868ce418152a6ffb82a84037b4f28b9d345ee7f84a0374101771f891779af013e26e3540c26f4734d8717097f39bc9</sign>
 </payment>'
                 ),
-                new CompletionEntityResponse(
-                    12345678,
-                    5,
-                    'a98688b38115a7b42f55ca74a2fe6f6fb536b57d',
-                    '566d16af0f9aeb12d055a2117160194ec0868ce418152a6ffb82a84037b4f28b9d345ee7f84a0374101771f891779af013e26e3540c26f4734d8717097f39bc9',
-                    '2019-07-02 11:08:55',
-                    [
-                        new TransactionEntityResponse(
-                            11223344,
-                            26501014380602,
-                            300346,
-                            37973023,
-                            'ПАТ "АЛЬФА-БАНК"',
-                            100,
-                            110,
-                        ),
-                    ]
-                ),
+                (new CompletionEntityResponse())
+                    ->setPid(12345678)
+                    ->setStatus(5)
+                    ->setSalt('a98688b38115a7b42f55ca74a2fe6f6fb536b57d')
+                    ->setSign('566d16af0f9aeb12d055a2117160194ec0868ce418152a6ffb82a84037b4f28b9d345ee7f84a0374101771f891779af013e26e3540c26f4734d8717097f39bc9')
+                    ->setSaleDate('2019-07-02 11:08:55')
+                    ->setTransactions((new Transactions())->addTransaction($this->createTransactionEntityResponse())),
             ],
         ];
+    }
+
+    private function createTransactionEntityResponse(): TransactionEntityResponse
+    {
+        return (new TransactionEntityResponse())
+            ->setTrnId(11223344)
+            ->setSmchRr(26501014380602)
+            ->setSmchMfo(300346)
+            ->setSmchOkpo(37973023)
+            ->setSmchBank('ПАТ "АЛЬФА-БАНК"')
+            ->setInvoice(100)
+            ->setAmount(110);
     }
 
     private function createResponse(string $body, int $status = 200, array $headers = []): ResponseInterface

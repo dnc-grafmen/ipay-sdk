@@ -6,18 +6,17 @@ namespace IPaySdk\Entity;
 
 class CreatePaymentEntityResponse extends AbstractEntityResponse
 {
-    public function __construct(
-        int $pid,
-        int $status,
-        string $salt,
-        string $sign,
-        private string $url,
-    ) {
-        parent::__construct($pid, $status, $salt, $sign);
-    }
+    private string $url;
 
     public function getUrl(): string
     {
         return $this->url;
+    }
+
+    public function setUrl(string $url): self
+    {
+        $this->url = $url;
+
+        return $this;
     }
 }
