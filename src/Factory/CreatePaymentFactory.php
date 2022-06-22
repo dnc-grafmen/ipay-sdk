@@ -8,6 +8,7 @@ use IPaySdk\DTO\CreatePaymentDTO;
 use IPaySdk\DTO\DataDTOInterface;
 use IPaySdk\DTO\UrlsDTO;
 use IPaySdk\Model\ModelInterface;
+use IPaySdk\Response\CreatePaymentResponse;
 use IPaySdk\Utils;
 
 final class CreatePaymentFactory extends AbstractPaymentFactory
@@ -39,5 +40,10 @@ final class CreatePaymentFactory extends AbstractPaymentFactory
             ->addChild($this->factory->create('good', $urls->getGoodUrl()))
             ->addChild($this->factory->create('bad', $urls->getBadUrl()))
         ;
+    }
+
+    public function getResponseType(): string
+    {
+        return CreatePaymentResponse::class;
     }
 }

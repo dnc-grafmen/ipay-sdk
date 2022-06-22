@@ -10,4 +10,6 @@ use IPaySdk\Model\ModelInterface;
 interface PaymentFactoryInterface
 {
     public function create(int $merchantId, string $signKey, DataDTOInterface $data): ModelInterface;
+
+    public function getResponseType(): string;
 }

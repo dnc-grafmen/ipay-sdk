@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<payment>
+    <pid>12345678</pid>
+    <status>9</status>
+    <sale_date>2019-07-02 11:08:55</sale_date>
+    <transactions>
+        <transaction>
+            <trn_id>11223344</trn_id>
+            <smch_rr>26501014380602</smch_rr>
+            <smch_mfo>300346</smch_mfo>
+            <smch_okpo>37973023</smch_okpo>
+            <smch_bank>ПАТ "АЛЬФА-БАНК"</smch_bank>
+            <invoice>100</invoice>
+            <amount>110</amount>
+        </transaction>
+    </transactions>
+    <salt>a98688b38115a7b42f55ca74a2fe6f6fb536b57d</salt>
+    <sign>566d16af0f9aeb12d055a2117160194ec0868ce418152a6ffb82a84037b4f28b9d345ee7f84a0374101771f891779af013e26e3540c26f4734d8717097f39bc9</sign>
+</payment>

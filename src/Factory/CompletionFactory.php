@@ -8,6 +8,7 @@ use IPaySdk\Actions;
 use IPaySdk\DTO\CompletionDTO;
 use IPaySdk\DTO\DataDTOInterface;
 use IPaySdk\Model\ModelInterface;
+use IPaySdk\Response\CompletionResponse;
 
 final class CompletionFactory extends AbstractPaymentFactory
 {
@@ -19,5 +20,10 @@ final class CompletionFactory extends AbstractPaymentFactory
             ->addChild($this->createAuth($merchantId, $signKey))
             ->addChild($this->factory->create('action', Actions::COMPLETION))
             ->addChild($this->factory->create('pid', $data->getPid()));
+    }
+
+    public function getResponseType(): string
+    {
+        return CompletionResponse::class;
     }
 }

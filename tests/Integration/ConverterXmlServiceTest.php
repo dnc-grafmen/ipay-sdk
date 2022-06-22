@@ -2,14 +2,23 @@
 
 declare(strict_types=1);
 
-namespace Integration;
+namespace Test\Integration;
 
+use IPaySdk\DTO\CompletionDTO;
+use IPaySdk\DTO\CompletionWithTransactionDTO;
 use IPaySdk\DTO\CreatePaymentDTO;
+use IPaySdk\DTO\RefundDTO;
+use IPaySdk\DTO\ReversalDTO;
+use IPaySdk\DTO\StatusDTO;
 use IPaySdk\DTO\TransactionDTO;
 use IPaySdk\DTO\TransactionDTOCollection;
 use IPaySdk\DTO\UrlsDTO;
+use IPaySdk\Factory\CompletionFactory;
+use IPaySdk\Factory\CompletionWithTransactionFactory;
 use IPaySdk\Factory\CreatePaymentFactory;
-use IPaySdk\Generator\SaltGeneratorInterface;
+use IPaySdk\Factory\RefundFactory;
+use IPaySdk\Factory\ReversalFactory;
+use IPaySdk\Factory\StatusFactory;
 use IPaySdk\Model\ModelInterface;
 use IPaySdk\Service\ConverterServiceInterface;
 use IPaySdk\Service\ConverterXmlService;
@@ -17,6 +26,8 @@ use PHPUnit\Framework\TestCase;
 
 class ConverterXmlServiceTest extends TestCase
 {
+    use TestUtils;
+
     private ConverterServiceInterface $converterService;
 
     protected function setUp(): void
@@ -37,62 +48,101 @@ class ConverterXmlServiceTest extends TestCase
 
     public function convertModelDataProvider(): iterable
     {
-        return [
-            [
-                (new CreatePaymentFactory($this->createSaltGenerator()))
-                    ->create(
-                        2023,
-                        'sign_key_secret',
-                        new CreatePaymentDTO(
-                            new UrlsDTO('http://www.example.com/ok/', 'http://www.example.com/fail/'),
-                            (new TransactionDTOCollection())
-                                ->addTransaction(
-                                    new TransactionDTO(
-                                        55,
-                                        'UAH',
-                                        'Покупка товара/услуги',
-                                        ['dogovor' => 123456],
-                                        4301,
-                                    )
-                                ),
-                            24,
-                            'ru',
-                            ['ru' => 'название на русском', 'ua' => 'назва на українській', 'en' => 'english name']
+        yield 'Create payment request' => [
+            (new CreatePaymentFactory($this->createSaltGenerator()))->create(
+                2023,
+                'sign_key_secret',
+                new CreatePaymentDTO(
+                    new UrlsDTO('http://www.example.com/ok/', 'http://www.example.com/fail/'),
+                    (new TransactionDTOCollection())->addTransaction(
+                        new TransactionDTO(
+                            55,
+                            'UAH',
+                            'Покупка товара/услуги',
+                            ['dogovor' => 123456],
+                            4301,
                         )
                     ),
-                '<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<payment>
-    <auth>
-        <mch_id>2023</mch_id>
-        <salt>cd4122c9e96209a83fd4ffdc4479471e0cc8c974</salt>
-        <sign>a6e1f03c5b132b52ae8f1925a79f438824198f7e3a3ac3ccb5c2d570bb84119bacf97bf67b772515d710d3e2d1f3ba8c368c395fd7512bd72c4aca94886dc301</sign>
-    </auth>
-    <urls>
-        <good>http://www.example.com/ok/</good>
-        <bad>http://www.example.com/fail/</bad>
-    </urls>
-    <transactions>
-        <transaction>
-            <amount>55</amount>
-            <currency>UAH</currency>
-            <desc>Покупка товара/услуги</desc>
-            <info>{"dogovor":123456}</info>
-            <smch_id>4301</smch_id>
-        </transaction>
-    </transactions>
-    <lifetime>24</lifetime>
-    <lang>ru</lang>
-    <trademark>{"ru":"название на русском","ua":"назва на українській","en":"english name"}</trademark>
-</payment>',
-            ],
+                    24,
+                    'ru',
+                    ['ru' => 'название на русском', 'ua' => 'назва на українській', 'en' => 'english name']
+                )
+            ),
+            $this->readFileXmlPaymentRequest('createPayment.xml'),
         ];
-    }
 
-    protected function createSaltGenerator(): SaltGeneratorInterface
-    {
-        $stub = $this->createMock(SaltGeneratorInterface::class);
-        $stub->method('getSalt')->willReturn(sha1('my_secret_word_for_salt'));
+        yield 'Completion request' => [
+            (new CompletionFactory($this->createSaltGenerator()))->create(
+                2023,
+                'sign_key_secret',
+                new CompletionDTO(12345678)
+            ),
+            $this->readFileXmlPaymentRequest('completion.xml'),
+        ];
 
-        return $stub;
+        yield 'Completion with transaction request' => [
+            (new CompletionWithTransactionFactory($this->createSaltGenerator()))->create(
+                2023,
+                'sign_key_secret',
+                new CompletionWithTransactionDTO(
+                    12345678,
+                    new TransactionDTOCollection([
+                        new TransactionDTO(
+                            100,
+                            'UAH',
+                            'Покупка товара/услуги',
+                            [
+                                "dogovor" => 12345
+                            ],
+                            4301
+                        ),
+                        new TransactionDTO(
+                            200,
+                            'UAH',
+                            'Покупка услуги/товара',
+                            [
+                                "dogovor" => 56789
+                            ],
+                            4551
+                        )
+                    ])
+                )
+            ),
+            $this->readFileXmlPaymentRequest('completionWithTransaction.xml'),
+        ];
+
+        yield 'Reversal request' => [
+            (new ReversalFactory($this->createSaltGenerator()))->create(
+                2023,
+                'sign_key_secret',
+                new ReversalDTO(
+                    12345678,
+                    ['reversal_id' => '123456']
+                )
+            ),
+            $this->readFileXmlPaymentRequest('reversal.xml')
+        ];
+
+        yield 'Refund request' => [
+            (new RefundFactory($this->createSaltGenerator()))->create(
+                2023,
+                'sign_key_secret',
+                new RefundDTO(
+                    12345678,
+                    null,
+                    ['refund_id' => '123456']
+                )
+            ),
+            $this->readFileXmlPaymentRequest('refund.xml')
+        ];
+
+        yield 'Status request' => [
+            (new StatusFactory($this->createSaltGenerator()))->create(
+                2023,
+                'sign_key_secret',
+                new StatusDTO(12345678)
+            ),
+            $this->readFileXmlPaymentRequest('status.xml')
+        ];
     }
 }

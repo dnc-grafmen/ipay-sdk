@@ -4,16 +4,19 @@ declare(strict_types=1);
 
 namespace IPaySdk\Response;
 
-abstract class AbstractResponse implements EntityInterface
+use Symfony\Component\Serializer\Annotation\SerializedName;
+
+abstract class AbstractResponse implements ApiResponseInterface
 {
-    private int $pid;
+    #[SerializedName('pid')]
+    private int $paymentId;
     private int $status;
     private string $salt;
     private string $sign;
 
-    public function getPid(): int
+    public function getPaymentId(): int
     {
-        return $this->pid;
+        return $this->paymentId;
     }
 
     public function getStatus(): int
@@ -31,9 +34,9 @@ abstract class AbstractResponse implements EntityInterface
         return $this->sign;
     }
 
-    public function setPid(int $pid): self
+    public function setPaymentId(int $paymentId): self
     {
-        $this->pid = $pid;
+        $this->paymentId = $paymentId;
 
         return $this;
     }

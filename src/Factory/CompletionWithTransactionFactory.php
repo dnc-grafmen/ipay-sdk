@@ -10,6 +10,7 @@ use IPaySdk\DTO\DataDTOInterface;
 use IPaySdk\DTO\TransactionDTO;
 use IPaySdk\Exceptions\PaymentException;
 use IPaySdk\Model\ModelInterface;
+use IPaySdk\Response\CompletionResponse;
 
 final class CompletionWithTransactionFactory extends AbstractPaymentFactory
 {
@@ -31,11 +32,15 @@ final class CompletionWithTransactionFactory extends AbstractPaymentFactory
 
     protected function createTransaction(TransactionDTO $transaction): ModelInterface
     {
-        if (!is_null($transaction->getLegalEntityId())) {
+        if (is_null($transaction->getLegalEntityId())) {
             throw PaymentException::fieldIsRequired('LegalEntityId [smch_id]');
         }
 
         return $this->doCreateTransaction($transaction);
     }
 
+    public function getResponseType(): string
+    {
+        return CompletionResponse::class;
+    }
 }

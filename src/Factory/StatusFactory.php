@@ -8,6 +8,7 @@ use IPaySdk\Actions;
 use IPaySdk\DTO\DataDTOInterface;
 use IPaySdk\DTO\StatusDTO;
 use IPaySdk\Model\ModelInterface;
+use IPaySdk\Response\StatusResponse;
 
 final class StatusFactory extends AbstractPaymentFactory
 {
@@ -19,5 +20,10 @@ final class StatusFactory extends AbstractPaymentFactory
             ->addChild($this->createAuth($merchantId, $signKey))
             ->addChild($this->factory->create('action', Actions::STATUS))
             ->addChild($this->factory->create('pid', $data->getPid()));
+    }
+
+    public function getResponseType(): string
+    {
+        return StatusResponse::class;
     }
 }

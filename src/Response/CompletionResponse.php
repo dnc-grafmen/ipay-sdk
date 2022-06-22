@@ -4,18 +4,20 @@ declare(strict_types=1);
 
 namespace IPaySdk\Response;
 
+use DateTimeInterface;
+
 class CompletionResponse extends AbstractResponse
 {
-    private string $saleDate;
+    private string|DateTimeInterface $saleDate;
 
     public TransactionsCollection $transactions;
 
-    public function getSaleDate(): string
+    public function getSaleDate(): string|DateTimeInterface
     {
         return $this->saleDate;
     }
 
-    public function setSaleDate(string $saleDate): CompletionResponse
+    public function setSaleDate(string|DateTimeInterface $saleDate): self
     {
         $this->saleDate = $saleDate;
 
@@ -27,7 +29,7 @@ class CompletionResponse extends AbstractResponse
         return $this->transactions;
     }
 
-    public function setTransactions(TransactionsCollection $transactions): CompletionResponse
+    public function setTransactions(TransactionsCollection $transactions): self
     {
         $this->transactions = $transactions;
 

@@ -18,7 +18,7 @@ class TransactionDTO
         private string $currency,
         private string $description,
         private array|string $info,
-        private ?int $legalEntityId,
+        private ?int $legalEntityId = null,
     ) {}
 
     public function getAmount(): int

@@ -8,6 +8,7 @@ use IPaySdk\Actions;
 use IPaySdk\DTO\DataDTOInterface;
 use IPaySdk\DTO\RefundDTO;
 use IPaySdk\Model\ModelInterface;
+use IPaySdk\Response\RefundResponse;
 use IPaySdk\Utils;
 
 final class RefundFactory extends AbstractPaymentFactory
@@ -30,5 +31,10 @@ final class RefundFactory extends AbstractPaymentFactory
         }
 
         return $payment;
+    }
+
+    public function getResponseType(): string
+    {
+        return RefundResponse::class;
     }
 }

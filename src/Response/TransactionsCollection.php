@@ -19,14 +19,14 @@ class TransactionsCollection
         return $this->items;
     }
 
-    public function setItems(array $items): TransactionsCollection
+    public function setItems(array $items): self
     {
         $this->items = $items;
 
         return $this;
     }
 
-    public function add(TransactionResponse $transactionResponse): TransactionsCollection
+    public function add(TransactionResponse $transactionResponse): self
     {
         $this->items[] = $transactionResponse;
 

@@ -16,7 +16,7 @@ final class UrlValidator
      */
     public static function validateAndThrowPaymentException(string $url): void
     {
-        if (self::validate($url)) {
+        if (!self::validate($url)) {
             throw PaymentException::urlIsNotAllowed($url);
         }
     }

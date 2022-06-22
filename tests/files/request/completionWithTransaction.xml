@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<payment>
+    <auth>
+        <mch_id>2023</mch_id>
+        <salt>cd4122c9e96209a83fd4ffdc4479471e0cc8c974</salt>
+        <sign>a6e1f03c5b132b52ae8f1925a79f438824198f7e3a3ac3ccb5c2d570bb84119bacf97bf67b772515d710d3e2d1f3ba8c368c395fd7512bd72c4aca94886dc301</sign>
+    </auth>
+    <action>completion</action>
+    <pid>12345678</pid>
+    <transactions>
+        <transaction>
+            <amount>100</amount>
+            <currency>UAH</currency>
+            <desc>Покупка товара/услуги</desc>
+            <info>{"dogovor":12345}</info>
+            <smch_id>4301</smch_id>
+        </transaction>
+        <transaction>
+            <amount>200</amount>
+            <currency>UAH</currency>
+            <desc>Покупка услуги/товара</desc>
+            <info>{"dogovor":56789}</info>
+            <smch_id>4551</smch_id>
+        </transaction>
+    </transactions>
+</payment>

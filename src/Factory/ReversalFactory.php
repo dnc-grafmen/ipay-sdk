@@ -8,6 +8,7 @@ use IPaySdk\Actions;
 use IPaySdk\DTO\DataDTOInterface;
 use IPaySdk\DTO\ReversalDTO;
 use IPaySdk\Model\ModelInterface;
+use IPaySdk\Response\ReversalResponse;
 use IPaySdk\Utils;
 
 final class ReversalFactory extends AbstractPaymentFactory
@@ -22,5 +23,10 @@ final class ReversalFactory extends AbstractPaymentFactory
             ->addChild($this->factory->create('pid', $data->getPid()))
             ->addChild($this->factory->create('info', Utils::JsonEncode($data->getInfo())))
         ;
+    }
+
+    public function getResponseType(): string
+    {
+        return ReversalResponse::class;
     }
 }

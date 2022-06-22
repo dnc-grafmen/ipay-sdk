@@ -9,24 +9,22 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Request;
 use IPaySdk\DTO\DataDTOInterface;
+use IPaySdk\Exceptions\PaymentException;
 use IPaySdk\Factory\ConverterServiceFactory;
 use IPaySdk\Factory\PaymentFactoryInterface;
-use IPaySdk\Response\EntityInterface;
+use IPaySdk\Response\ApiResponseInterface;
 use IPaySdk\Service\ResponseTransformService;
 
 final class IPayClient
 {
-    private ClientInterface $guzzleClient;
-
     public function __construct(
         private int $merchantId,
         private string $signKey,
+        private ClientInterface $guzzleClient,
         private string $apiEndpoint
-    ) {
-        $this->guzzleClient = new Client();
-    }
+    ) {}
 
-    public function send(PaymentFactoryInterface $paymentFactory, DataDTOInterface $data): EntityInterface
+    public function send(PaymentFactoryInterface $paymentFactory, DataDTOInterface $data): ApiResponseInterface
     {
         $model = $paymentFactory->create($this->merchantId, $this->signKey, $data);
 
@@ -39,8 +37,11 @@ final class IPayClient
         try {
             $response = $this->guzzleClient->send($request);
 
-            return (new ResponseTransformService())
-                ->convertResponse($response);
+            if ($response->getStatusCode() >= 400) {
+                throw new PaymentException(sprintf('Error from API: %s', $response->getBody()->getContents()), $response->getStatusCode());
+            }
+
+            return (new ResponseTransformService())->convertResponse($response, $paymentFactory->getResponseType());
         } catch (GuzzleException $exception) {
             throw $exception;
         }

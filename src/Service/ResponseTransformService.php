@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace IPaySdk\Service;
 
 use Doctrine\Common\Annotations\AnnotationReader;
-use IPaySdk\Response\EntityInterface;
+use IPaySdk\Response\ApiResponseInterface;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
@@ -49,9 +49,9 @@ class ResponseTransformService
         $this->serializer = new Serializer($normalizers, $encoders);
     }
 
-    public function convertResponse(ResponseInterface $response, string $type): EntityInterface
+    public function convertResponse(ResponseInterface $response, string $type): ApiResponseInterface
     {
-        assertTrue(array_key_exists(EntityInterface::class, class_implements($type)));
+        assertTrue(array_key_exists(ApiResponseInterface::class, class_implements($type)));
 
         $data = $response->getBody()->getContents();
 
