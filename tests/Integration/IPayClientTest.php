@@ -24,6 +24,7 @@ use IPaySdk\Factory\PaymentFactoryInterface;
 use IPaySdk\Factory\RefundFactory;
 use IPaySdk\Factory\ReversalFactory;
 use IPaySdk\Factory\StatusFactory;
+use IPaySdk\Generator\MicrotimeSaltGenerator;
 use IPaySdk\Response\ApiResponseInterface;
 use IPaySdk\Response\CompletionResponse;
 use IPaySdk\Response\CreatePaymentResponse;
@@ -84,7 +85,7 @@ class IPayClientTest extends TestCase
 
     public function sendDataProvider(): iterable
     {
-        $saltGenerator = $this->createSaltGenerator();
+        $saltGenerator = new MicrotimeSaltGenerator();
 
         $transactionDTO1 = new TransactionDTO(55, 'UAH', 'Покупка товара/услуги', '{"dogovor":123456}', 4301);
         $transactionDTO2 = new TransactionDTO(200, 'UAH', 'Покупка услуги/товара', '{"dogovor":56789}', 4551);

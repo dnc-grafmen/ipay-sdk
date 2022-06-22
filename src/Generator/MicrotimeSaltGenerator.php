@@ -8,6 +8,6 @@ final class MicrotimeSaltGenerator implements SaltGeneratorInterface
 {
     public function getSalt(): string
     {
-        return sha1(microtime(true));
+        return sha1(microtime());
     }
 }
