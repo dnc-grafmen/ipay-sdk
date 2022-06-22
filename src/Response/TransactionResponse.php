@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace IPaySdk\Entity;
+namespace IPaySdk\Response;
 
 use Symfony\Component\Serializer\Annotation\SerializedName;
 
-class TransactionEntityResponse
+class TransactionResponse
 {
     #[SerializedName('trn_id')]
     private int $trnId;

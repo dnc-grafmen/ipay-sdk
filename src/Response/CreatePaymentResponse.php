@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace IPaySdk\Entity;
+namespace IPaySdk\Response;
 
-class CreatePaymentEntityResponse extends AbstractEntityResponse
+class CreatePaymentResponse extends AbstractResponse
 {
     private string $url;
 

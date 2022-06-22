@@ -2,31 +2,32 @@
 
 declare(strict_types=1);
 
-namespace IPaySdk\Entity;
+namespace IPaySdk\Response;
 
-class CompletionEntityResponse extends AbstractEntityResponse
+class CompletionResponse extends AbstractResponse
 {
     private string $saleDate;
-    private Transactions $transactions;
+
+    public TransactionsCollection $transactions;
 
     public function getSaleDate(): string
     {
         return $this->saleDate;
     }
 
-    public function setSaleDate(string $saleDate): self
+    public function setSaleDate(string $saleDate): CompletionResponse
     {
         $this->saleDate = $saleDate;
 
         return $this;
     }
 
-    public function getTransactions(): Transactions
+    public function getTransactions(): TransactionsCollection
     {
         return $this->transactions;
     }
 
-    public function setTransactions(Transactions $transactions): self
+    public function setTransactions(TransactionsCollection $transactions): CompletionResponse
     {
         $this->transactions = $transactions;
 

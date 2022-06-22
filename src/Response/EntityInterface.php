@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace IPaySdk\Entity;
+namespace IPaySdk\Response;
 
 interface EntityInterface
 {

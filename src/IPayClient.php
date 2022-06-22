@@ -9,9 +9,9 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Request;
 use IPaySdk\DTO\DataDTOInterface;
-use IPaySdk\Entity\EntityInterface;
 use IPaySdk\Factory\ConverterServiceFactory;
 use IPaySdk\Factory\PaymentFactoryInterface;
+use IPaySdk\Response\EntityInterface;
 use IPaySdk\Service\ResponseTransformService;
 
 final class IPayClient

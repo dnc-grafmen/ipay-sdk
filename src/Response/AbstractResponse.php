@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace IPaySdk\Entity;
+namespace IPaySdk\Response;
 
-abstract class AbstractEntityResponse implements EntityInterface
+abstract class AbstractResponse implements EntityInterface
 {
     private int $pid;
     private int $status;
