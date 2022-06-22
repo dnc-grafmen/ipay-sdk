@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Test\Integration;
+namespace IPaySdk\Tests\Integration;
 
 use IPaySdk\Generator\SaltGeneratorInterface;
 

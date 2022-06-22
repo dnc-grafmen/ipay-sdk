@@ -8,8 +8,12 @@
     },
     "autoload": {
         "psr-4": {
-            "IPaySdk\\": "src/",
-            "Test\\": "tests/"
+            "IPaySdk\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "IPaySdk\\Tests\\": "tests/"
         }
     },
     "authors": [
