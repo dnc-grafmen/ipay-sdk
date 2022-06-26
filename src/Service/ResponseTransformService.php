@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace IPaySdk\Service;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use IPaySdk\Exceptions\PaymentException;
 use IPaySdk\Response\ApiResponseInterface;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\PropertyInfo\Extractor\PhpDocExtractor;
@@ -21,8 +22,6 @@ use Symfony\Component\Serializer\Normalizer\PropertyNormalizer;
 use Symfony\Component\Serializer\Serializer;
 use Symfony\Component\Serializer\SerializerInterface;
 
-use function PHPUnit\Framework\assertTrue;
-
 class ResponseTransformService
 {
     private SerializerInterface $serializer;
@@ -30,14 +29,12 @@ class ResponseTransformService
     public function __construct()
     {
         $classMetadataFactory = new ClassMetadataFactory(new AnnotationLoader(new AnnotationReader()));
-
         $metadataAwareNameConverter = new MetadataAwareNameConverter($classMetadataFactory);
+        $extractor = new PropertyInfoExtractor([], [new PhpDocExtractor(), new ReflectionExtractor()]);
 
         $encoders = [
             new XmlEncoder(),
         ];
-
-        $extractor = new PropertyInfoExtractor([], [new PhpDocExtractor(), new ReflectionExtractor()]);
 
         $normalizers = [
             new ObjectNormalizer(null, $metadataAwareNameConverter, null, $extractor),
@@ -51,9 +48,24 @@ class ResponseTransformService
 
     public function convertResponse(ResponseInterface $response, string $type): ApiResponseInterface
     {
-        assertTrue(array_key_exists(ApiResponseInterface::class, class_implements($type)));
-
         $data = $response->getBody()->getContents();
+
+        if (
+            $response->getStatusCode() >= 400 ||
+            str_contains($data, 'empty request') ||
+            // response from api can be have the "<error>...</error>"
+            str_contains($data, '<error>')
+        ) {
+            throw new PaymentException(
+                sprintf(
+                    'Error from API: %s',
+                    $data
+                ),
+                $response->getStatusCode()
+            );
+        }
+
+        assert(array_key_exists(ApiResponseInterface::class, class_implements($type)));
 
         return $this->serializer->deserialize($data, $type, 'xml');
     }

@@ -78,7 +78,7 @@ class IPayClientTest extends TestCase
         $responseMock->method('getStatusCode')->willReturn(200);
 
         $clientMock = $this->createMock(ClientInterface::class);
-        $clientMock->method('send')->willReturn($responseMock);
+        $clientMock->method('request')->willReturn($responseMock);
 
         return $clientMock;
     }

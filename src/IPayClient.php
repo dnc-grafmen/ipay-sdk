@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace IPaySdk;
 
-use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
-use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\RequestOptions;
 use IPaySdk\DTO\DataDTOInterface;
-use IPaySdk\Exceptions\PaymentException;
 use IPaySdk\Factory\ConverterServiceFactory;
 use IPaySdk\Factory\PaymentFactoryInterface;
 use IPaySdk\Response\ApiResponseInterface;
@@ -32,14 +30,12 @@ final class IPayClient
         $serviceXml = $serviceFactory->make(ConverterServiceFactory::TYPE_XML);
         $data = $serviceXml->convertModel($model);
 
-        $request = new Request(Constants::HTTP_METHOD, $this->apiEndpoint, [], $data);
-
         try {
-            $response = $this->guzzleClient->send($request);
-
-            if ($response->getStatusCode() >= 400) {
-                throw new PaymentException(sprintf('Error from API: %s', $response->getBody()->getContents()), $response->getStatusCode());
-            }
+            $response = $this->guzzleClient->request(Constants::HTTP_METHOD, $this->apiEndpoint, [
+                RequestOptions::FORM_PARAMS => [
+                    'data' => $data,
+                ]
+            ]);
 
             return (new ResponseTransformService())->convertResponse($response, $paymentFactory->getResponseType());
         } catch (GuzzleException $exception) {
