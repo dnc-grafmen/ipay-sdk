@@ -17,4 +17,9 @@ class PaymentException extends DomainException
     {
         return new self(sprintf('The %s field is required', $fieldName), 500);
     }
+
+    public static function serviceNotExists(string $type): self
+    {
+        return new self(sprintf('Service %s doesnt exist', $type));
+    }
 }

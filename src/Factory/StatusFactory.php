@@ -12,7 +12,7 @@ use IPaySdk\Response\StatusResponse;
 
 final class StatusFactory extends AbstractPaymentFactory
 {
-    public function create(int $merchantId, string $signKey, DataDTOInterface $data): ModelInterface
+    public function create(DataDTOInterface $data, int $merchantId, string $signKey): ModelInterface
     {
         assert($data instanceof StatusDTO);
 

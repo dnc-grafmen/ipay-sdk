@@ -13,7 +13,7 @@ use IPaySdk\Utils;
 
 final class RefundFactory extends AbstractPaymentFactory
 {
-    public function create(int $merchantId, string $signKey, DataDTOInterface $data): ModelInterface
+    public function create(DataDTOInterface $data, int $merchantId, string $signKey): ModelInterface
     {
         assert($data instanceof RefundDTO);
 
@@ -22,12 +22,12 @@ final class RefundFactory extends AbstractPaymentFactory
             ->addChild($this->factory->create('action', Actions::REFUND))
             ->addChild($this->factory->create('pid', $data->getPid()));
 
-        if (!is_null($data->getAmount())) {
-            $payment->addChild($this->factory->create('amount', $data->getAmount()));
+        if ($amount = $data->getAmount()) {
+            $payment->addChild($this->factory->create('amount', $amount));
         }
 
-        if (!is_null($data->getInfo())) {
-            $payment->addChild($this->factory->create('info', Utils::JsonEncode($data->getInfo())));
+        if ($info = $data->getInfo()) {
+            $payment->addChild($this->factory->create('info', Utils::JsonEncode($info)));
         }
 
         return $payment;

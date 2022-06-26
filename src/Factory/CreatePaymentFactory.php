@@ -15,7 +15,7 @@ final class CreatePaymentFactory extends AbstractPaymentFactory
 {
     use CreateTransactionsTrait;
 
-    public function create(int $merchantId, string $signKey, DataDTOInterface $data): ModelInterface
+    public function create(DataDTOInterface $data, int $merchantId, string $signKey): ModelInterface
     {
         assert($data instanceof CreatePaymentDTO);
 
@@ -27,8 +27,8 @@ final class CreatePaymentFactory extends AbstractPaymentFactory
             ->addChild($this->factory->create('lang', $data->getLang()))
         ;
 
-        if (!is_null($data->getTrademark())) {
-            $payment->addChild($this->factory->create('trademark', Utils::JsonEncode($data->getTrademark())));
+        if ($trademark = $data->getTrademark()) {
+            $payment->addChild($this->factory->create('trademark', Utils::JsonEncode($trademark)));
         }
 
         return $payment;

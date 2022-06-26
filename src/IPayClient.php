@@ -24,22 +24,18 @@ final class IPayClient
 
     public function send(PaymentFactoryInterface $paymentFactory, DataDTOInterface $data): ApiResponseInterface
     {
-        $model = $paymentFactory->create($this->merchantId, $this->signKey, $data);
+        $model = $paymentFactory->create($data, $this->merchantId, $this->signKey);
 
         $serviceFactory = new ConverterServiceFactory();
         $serviceXml = $serviceFactory->make(ConverterServiceFactory::TYPE_XML);
         $data = $serviceXml->convertModel($model);
 
-        try {
-            $response = $this->guzzleClient->request(Constants::HTTP_METHOD, $this->apiEndpoint, [
-                RequestOptions::FORM_PARAMS => [
-                    'data' => $data,
-                ]
-            ]);
+        $response = $this->guzzleClient->request(Constants::HTTP_METHOD, $this->apiEndpoint, [
+            RequestOptions::FORM_PARAMS => [
+                'data' => $data,
+            ]
+        ]);
 
-            return (new ResponseTransformService())->convertResponse($response, $paymentFactory->getResponseType());
-        } catch (GuzzleException $exception) {
-            throw $exception;
-        }
+        return (new ResponseTransformService())->convertResponse($response, $paymentFactory->getResponseType());
     }
 }

@@ -13,7 +13,7 @@ use IPaySdk\Utils;
 
 final class ReversalFactory extends AbstractPaymentFactory
 {
-    public function create(int $merchantId, string $signKey, DataDTOInterface $data): ModelInterface
+    public function create(DataDTOInterface $data, int $merchantId, string $signKey): ModelInterface
     {
         assert($data instanceof ReversalDTO);
 
