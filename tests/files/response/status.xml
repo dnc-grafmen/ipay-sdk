@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<payment>
+    <salt>cc348f94880ed17b1b09e1061ff6984d88042cc8</salt>
+    <sign>d11b748a790102fe36f6949eba2ad3aceb4e358c7cf54813384dfb71bef22b4037376ae6767af60ac9676280b89f27822acaaf376c1d27571f778c6859505502</sign>
+    <pmt_id>12345678</pmt_id>
+    <status>1</status>
+    <card_mask>***</card_mask>
+    <invoice>30</invoice>
+    <amount>30</amount>
+    <desc>test</desc>
+    <init_date>2021-03-19 12:33:17</init_date>
+    <bnk_error_group></bnk_error_group>
+    <bnk_error_note></bnk_error_note>
+</payment>

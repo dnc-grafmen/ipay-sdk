@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<payment>
+    <pid>12345678</pid>
+    <status>1</status>
+    <salt>e9be5bc9a02a5af61efecd722b7b05e84d106d1a</salt>
+    <sign>0c8698119b846202bd87d948cfce1eba7bc535c49dca4752fe8f969abefd05147b4b87fd9332173e242a0f1a78a42eed8c1846d4781a220fd564f0fbce3ff393</sign>
+    <url>https://checkout.ipay.ua/a1f7e6a6ced6fc72d4dbb48da6babc7d2ca89ac2</url>
+</payment>
