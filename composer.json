@@ -1,5 +1,5 @@
 {
-    "name": "dnc/ipay-sdk",
+    "name": "dnc-grafmen/ipay-sdk",
     "type": "library",
     "require": {
         "guzzlehttp/guzzle": "^7.4",
