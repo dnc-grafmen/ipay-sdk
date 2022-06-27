@@ -1,10 +1,10 @@
-#PHP IPay SDK
-######Simple PHP sdk for IPay api
-###Installation
+# PHP IPay SDK
+###### Simple PHP sdk for IPay api
+### Installation
 `composer require dnc-grafmen/ipay-sdk`
-###Usage
+### Usage
 Make the `IPayClientFactory` and call his method `create` with parameters for create the `IPayClient`
-####Example
+#### Example
 ```PHP
 $merchantId = 2300;
 $signKey = 'my_super_secret_sign_key_from_account';
@@ -14,13 +14,13 @@ $clientSandbox = $factory->create($merchantId, $signKey, new \GuzzleHttp\Client(
 $clientProduction = $factory->create($merchantId, $signKey, new \GuzzleHttp\Client());
 ```
 The next step - make the factory which implemented the `PaymentFactoryInterface`.
-####Example
+#### Example
 ```PHP
 $saltGenerator = new \IPaySdk\Generator\MicrotimeSaltGenerator();
 $factory = new \IPaySdk\Factory\CreatePaymentFactory($saltGenerator);
 ```
 And we also need to create a DTO that implements `DataDTOInterface`
-####Example
+#### Example
 ```PHP
 $dto = new \IPaySdk\DTO\CreatePaymentDTO(
     new \IPaySdk\DTO\UrlsDTO('https://my.site.com/payment/ok', 'https://my.site.com/payment/fail'),
@@ -37,19 +37,15 @@ $dto = new \IPaySdk\DTO\CreatePaymentDTO(
     ['ua' => 'ua message', 'ru' => 'ru message', 'en' => 'en message']
 );
 ```
-
 And put this data to client send method.
-####Example
+#### Example
 ```PHP
 $response = $client->send($factory, $dto);
 ```
 You got the `ApiResponseInterface` object
-
 The factory knows what type of answer you will get
-
 For more information check the [api documentation](https://checkout.ipay.ua/doc)
-
-###Full code
+### Full code
 ```PHP
 $merchantId = 2300;
 $signKey = 'my_super_secret_sign_key_from_account';
