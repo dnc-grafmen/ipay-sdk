@@ -23,10 +23,10 @@ class StatusResponse extends AbstractResponse
     private string|DateTimeInterface $initDate;
 
     #[SerializedName('bnk_error_group')]
-    private array $bankErrorGroup = [];
+    private ?int $bankErrorGroup;
 
     #[SerializedName('bnk_error_note')]
-    private array $bankErrorNote = [];
+    private ?string $bankErrorNote;
 
     public function getPaymentId(): int
     {
@@ -98,24 +98,24 @@ class StatusResponse extends AbstractResponse
         return $this;
     }
 
-    public function getBankErrorGroup(): array
+    public function getBankErrorGroup(): ?int
     {
         return $this->bankErrorGroup;
     }
 
-    public function setBankErrorGroup(array $bankErrorGroup): self
+    public function setBankErrorGroup(?int $bankErrorGroup): self
     {
         $this->bankErrorGroup = $bankErrorGroup;
 
         return $this;
     }
 
-    public function getBankErrorNote(): array
+    public function getBankErrorNote(): ?string
     {
         return $this->bankErrorNote;
     }
 
-    public function setBankErrorNote(array $bankErrorNote): self
+    public function setBankErrorNote(?string $bankErrorNote): self
     {
         $this->bankErrorNote = $bankErrorNote;
 
