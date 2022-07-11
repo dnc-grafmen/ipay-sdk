@@ -151,7 +151,7 @@ class ResponseTransformServiceTest extends TestCase
             $this->createResponse($this->readFileXmlPaymentResponse('status.xml')),
             (new StatusResponse())
                 ->setPaymentId(12345678)
-                ->setStatus(1)
+                ->setStatus(5)
                 ->setSalt('cc348f94880ed17b1b09e1061ff6984d88042cc8')
                 ->setSign('d11b748a790102fe36f6949eba2ad3aceb4e358c7cf54813384dfb71bef22b4037376ae6767af60ac9676280b89f27822acaaf376c1d27571f778c6859505502')
                 ->setCardMask('***')
@@ -159,8 +159,8 @@ class ResponseTransformServiceTest extends TestCase
                 ->setAmount(30)
                 ->setDescription('test')
                 ->setInitDate('2021-03-19 12:33:17')
-                ->setBankErrorGroup([])
-                ->setBankErrorNote([])
+                ->setBankErrorGroup(0)
+                ->setBankErrorNote('')
         ];
     }
 
